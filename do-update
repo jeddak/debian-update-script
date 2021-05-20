@@ -1,0 +1,94 @@
+#!/bin/zsh
+
+
+#sudo apt-listbugs
+
+# are you sure you want to continue (Y/n)?
+
+
+function banner() {
+        echo -e "\n$(tput smso)$(tput setaf 6)$(tput setab 4)                                                                                          \n============================== Debian Software Update Utility ==============================\n                                                                                         $(tput sgr0)"
+}
+
+function dosudo() {
+    echo "\nPlease enter your superuser password"
+    sudo date
+}
+
+function clean() {
+    start-status  "scrubbing local repository of old retrieved package files..." 
+    sudo apt-get clean
+    end-status "repository cleanup complete\n"
+}
+
+function update() {
+    start-status "resynchronizing package index files with latest available information..."
+    sudo apt-get update
+    end-status "package index resynchronization complete\n"
+}
+
+
+function upgrade() {
+    start-status "installing updates..."
+    sudo apt-get -u -V upgrade
+    end-status "package upgrades complete\n"
+}
+
+
+function dist-upgrade() {
+    start-status "checking dependencies for new versions and resolving any conflicts..."
+    sudo apt-get -V dist-upgrade
+    end-status "dependency checks complete\n"
+}
+
+function autoremove() {
+    start-status "removing dependency packages that are now no longer needed..."
+    sudo apt autoremove
+    end-status "obsolete dependency removal process complete\n"
+}
+
+function autoclean() {
+    start-status "deleting defunct package files from local repository..."
+    sudo apt-get autoclean
+    end-status "defunct package file cleanup process complete\n"
+}
+
+function run-aptitude-full-upgrade() {
+    start-status "running aptitude full-upgrade..."
+    sudo /usr/bin/aptitude full-upgrade
+    end-status "aptitude process complete\n"
+}
+
+function update-file-signatures() {
+    start-status "updating rkhunter file properties..."
+    sudo /usr/bin/rkhunter --propupdate
+    end-status "done\n"
+}
+
+function start-status() {
+    echo -e "$(tput setaf 5)$1$(tput sgr0)"
+}
+
+function end-status() {
+    echo -e "$(tput setaf 2)$1$(tput sgr0)"
+}
+
+banner && \
+    dosudo && \
+    clean  && \
+    update    && \
+    upgrade  && \
+    update   && \
+    dist-upgrade  && \
+    autoremove  && \
+    autoclean  && \
+    clean && \
+    run-aptitude-full-upgrade && \
+    update-file-signatures
+
+
+
+#sudo apt-listchanges /package-name/
+
+echo "\noperating system update process complete\n"
+
