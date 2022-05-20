@@ -1,13 +1,8 @@
 #!/bin/zsh
 
-
-#sudo apt-listbugs
-
-# are you sure you want to continue (Y/n)?
-
-
 function banner() {
-        echo -e "\n$(tput smso)$(tput setaf 6)$(tput setab 4)                                                                                          \n============================== Debian Software Update Utility ==============================\n                                                                                         $(tput sgr0)"
+    heading="Debian Software Update Utility"
+    print-heading ${heading}
 }
 
 function dosudo() {
@@ -73,6 +68,13 @@ function end-status() {
     echo -e "$(tput setaf 2)$1$(tput sgr0)"
 }
 
+function print-heading() {
+    msg=" $1 "
+    print -r - $(tput smso)$(tput setaf 6)$(tput setab 4)${(l[COLUMNS/2][=]r[COLUMNS-COLUMNS/2][=])msg}$(tput smso)$(tput setaf 6)$(tput setab 4)$(tput sgr0)
+}
+
+
+
 banner && \
     dosudo && \
     clean  && \
@@ -86,9 +88,6 @@ banner && \
     run-aptitude-full-upgrade && \
     update-file-signatures
 
+sudo needrestart
 
-
-#sudo apt-listchanges /package-name/
-
-echo "\noperating system update process complete\n"
-
+print-heading "operating system update process complete"
